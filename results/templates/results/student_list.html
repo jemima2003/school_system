@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+<link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>All Students</title>
+</head>
+<body>
+    <h1>Students</h1>
+
+    <ul>
+        {% for student in students %}
+        <li>
+            {{ student.full_name }} - Grade {{ student.grade }}
+            <a href="/results/student/{{ student.id }}/">Results</a>
+            |
+            <a href="/results/student/{{ student.id }}/fees/">Fees</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

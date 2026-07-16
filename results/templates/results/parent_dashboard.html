@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+<link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>Parent Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ parent.full_name }}</h1>
+
+    <h3>Your Children</h3>
+    <ul>
+        {% for student in students %}
+        <li>
+            {{ student.full_name }} - Grade {{ student.grade }}
+            <a href="/results/student/{{ student.id }}/">Results</a>
+            |
+            <a href="/results/student/{{ student.id }}/fees/">Fees</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="/results/parent/logout/">Log Out</a></p>
+</body>
+</html>
