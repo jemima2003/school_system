@@ -10,6 +10,15 @@
 
     <p>Total Students: {{ students.count }}</p>
 
+    <h3>Staff Signup Links</h3>
+    <p>Share these links with your staff so they can create their own accounts:</p>
+    <p><strong>Teacher Signup:</strong><br>
+    <code>https://elimuhub-1ccn.onrender.com/results/school/{{ school.id }}/teacher/signup/</code></p>
+
+    <p><strong>Accountant Signup:</strong><br>
+    <code>https://elimuhub-1ccn.onrender.com/results/school/{{ school.id }}/accountant/signup/</code></p>
+
+    <h3>Students</h3>
     <ul>
         {% for student in students %}
         <li>{{ student.full_name }} - Grade {{ student.grade }}</li>

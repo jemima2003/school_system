@@ -3,13 +3,14 @@ Django settings for school_system project.
 """
 
 from pathlib import Path
+import os
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-!8l(gdqvef=l0#61emebu57jc=((2coe%%ej*giaf_&k9de3f2'
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
