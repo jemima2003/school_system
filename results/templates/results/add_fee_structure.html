@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>Add Fee Structure</title>
+</head>
+<body>
+    <h1>Add Fee Structure</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label>Grade:</label><br>
+        <input type="number" name="grade" required><br><br>
+
+        <label>Term:</label><br>
+        <input type="number" name="term" required><br><br>
+
+        <label>Academic Year:</label><br>
+        <input type="number" name="academic_year" required><br><br>
+
+        <label>Amount Due:</label><br>
+        <input type="number" step="0.01" name="amount_due" required><br><br>
+
+        <button type="submit">Save</button>
+    </form>
+
+    <p><a href="/results/accountant/dashboard/">Back to Dashboard</a></p>
+</body>
+</html>
