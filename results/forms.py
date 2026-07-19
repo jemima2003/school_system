@@ -10,32 +10,81 @@ class MarkForm(forms.ModelForm):
 
 class ParentSignupForm(forms.Form):
     school = forms.ModelChoiceField(queryset=School.objects.all(), label="Select School")
-    admission_number = forms.CharField(max_length=20)
-    verification_code = forms.CharField(max_length=10)
-    full_name = forms.CharField(max_length=100)
-    phone = forms.CharField(max_length=20)
-    email = forms.EmailField(required=False)
-    password = forms.CharField(widget=forms.PasswordInput)
+    admission_number = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={'placeholder': "Child's Admission Number"})
+    )
+    verification_code = forms.CharField(
+        max_length=10,
+        widget=forms.TextInput(attrs={'placeholder': "Verification Code"})
+    )
+    full_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': "Your Full Name"})
+    )
+    phone = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={'placeholder': "Phone Number"})
+    )
+    email = forms.EmailField(
+        required=False,
+        widget=forms.EmailInput(attrs={'placeholder': "Email (optional)"})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': "Create a Password"})
+    )
 
 
 class SchoolSignupForm(forms.Form):
-    name = forms.CharField(max_length=100)
-    email = forms.EmailField()
-    phone = forms.CharField(max_length=20)
-    password = forms.CharField(widget=forms.PasswordInput)
+    name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': "School Name"})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'placeholder': "School Email"})
+    )
+    phone = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={'placeholder': "Phone Number"})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': "Create a Password"})
+    )
 
 
 class TeacherSignupForm(forms.Form):
     school_id = forms.IntegerField(widget=forms.HiddenInput)
-    full_name = forms.CharField(max_length=100)
-    email = forms.EmailField()
-    phone = forms.CharField(max_length=20)
-    password = forms.CharField(widget=forms.PasswordInput)
-    grade = forms.IntegerField()
+    full_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': "Your Full Name"})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'placeholder': "Email"})
+    )
+    phone = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={'placeholder': "Phone Number"})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': "Create a Password"})
+    )
+    grade = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'placeholder': "Grade You Teach (e.g. 1)"})
+    )
 
 
 class AccountantSignupForm(forms.Form):
-    full_name = forms.CharField(max_length=100)
-    email = forms.EmailField()
-    phone = forms.CharField(max_length=20)
-    password = forms.CharField(widget=forms.PasswordInput)
+    full_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': "Your Full Name"})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'placeholder': "Email"})
+    )
+    phone = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={'placeholder': "Phone Number"})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': "Create a Password"})
+    )
