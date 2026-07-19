@@ -521,3 +521,9 @@ def accountant_signup_select_school(request):
         return redirect('accountant_signup', school_id=school_id)
 
     return render(request, 'results/select_school.html', {'schools': schools, 'role': 'Accountant', 'action_url': '/results/accountant/signup/select/'})
+def about_us(request):
+    return render(request, 'results/about_us.html')
+
+
+def our_services(request):
+    return render(request, 'results/our_services.html')    

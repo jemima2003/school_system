@@ -189,3 +189,74 @@ li {
     font-size: 1.1em;
     user-select: none;
 }
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 30px;
+    box-sizing: border-box;
+}
+
+.hamburger {
+    font-size: 1.8em;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.nav-menu.show {
+    display: block;
+}
+
+.nav-menu a {
+    display: block;
+    padding: 12px 24px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 0.95em;
+}
+
+.nav-menu a:hover {
+    background: #f0f0f0;
+}
+
+.simple-page {
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #1c2e40, #2c3e50);
+    padding: 60px 20px;
+    box-sizing: border-box;
+}
+
+.simple-page .content-card {
+    background: white;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.simple-page h1 {
+    color: #1a3c5e;
+    border-bottom: 3px solid #2980b9;
+    padding-bottom: 10px;
+}
+
+.simple-page a.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #2980b9;
+}

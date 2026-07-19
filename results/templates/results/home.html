@@ -6,6 +6,14 @@
     <title>ElimuHub</title>
 </head>
 <body class="landing-page">
+    <div class="navbar">
+        <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+        <div class="nav-menu" id="nav-menu">
+            <a href="/results/about/">About Us</a>
+            <a href="/results/services/">Our Services</a>
+        </div>
+    </div>
+
     <h1 class="landing-title">ElimuHub</h1>
     <p class="landing-subtitle">School management made simple</p>
 
@@ -34,5 +42,11 @@
             <a href="/results/parent/signup/" class="secondary">Sign Up</a>
         </div>
     </div>
+
+    <script>
+    function toggleMenu() {
+        document.getElementById('nav-menu').classList.toggle('show');
+    }
+    </script>
 </body>
 </html>
