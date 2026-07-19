@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.hashers import make_password, check_password
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 from .models import Student, Mark, FeeStructure, Payment, Parent, School, Teacher, Subject, Assessment, Accountant
 from .forms import MarkForm, ParentSignupForm, SchoolSignupForm, TeacherSignupForm, AccountantSignupForm
 
@@ -21,8 +23,31 @@ def get_grade(percentage):
         return "E"
 
 
+def can_access_student(request, student):
+    parent_id = request.session.get('parent_id')
+    if parent_id:
+        return Parent.objects.filter(id=parent_id, students=student).exists()
+
+    teacher_id = request.session.get('teacher_id')
+    if teacher_id:
+        return Teacher.objects.filter(id=teacher_id, school=student.school).exists()
+
+    accountant_id = request.session.get('accountant_id')
+    if accountant_id:
+        return Accountant.objects.filter(id=accountant_id, school=student.school).exists()
+
+    school_id = request.session.get('school_id')
+    if school_id:
+        return student.school_id == school_id
+
+    return False
+
+
 def student_results(request, student_id):
     student = get_object_or_404(Student, id=student_id)
+    if not can_access_student(request, student):
+        return redirect('home')
+
     marks = Mark.objects.filter(student=student)
 
     total = sum(m.score for m in marks)
@@ -44,6 +69,8 @@ def student_results(request, student_id):
 
 def student_fees(request, student_id):
     student = get_object_or_404(Student, id=student_id)
+    if not can_access_student(request, student):
+        return redirect('home')
 
     fee_structure = FeeStructure.objects.filter(school=student.school, grade=student.grade).first()
     amount_due = fee_structure.amount_due if fee_structure else 0
@@ -388,3 +415,93 @@ def record_payment(request):
         return redirect('accountant_dashboard')
 
     return render(request, 'results/record_payment.html', {'accountant': accountant, 'students': students, 'error': error})
+
+
+def download_report_card(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    if not can_access_student(request, student):
+        return redirect('home')
+
+    marks = Mark.objects.filter(student=student)
+
+    total = sum(m.score for m in marks)
+    max_total = sum(m.max_score for m in marks)
+    average = total / len(marks) if marks else 0
+    percentage = (total / max_total * 100) if max_total else 0
+    grade = get_grade(percentage)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{student.full_name}_report_card.pdf"'
+
+    p = canvas.Canvas(response)
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(50, 800, f"{student.school.name}")
+    p.setFont("Helvetica", 12)
+    p.drawString(50, 780, f"Report Card - {student.full_name}")
+    p.drawString(50, 765, f"Admission No: {student.admission_number}  Grade: {student.grade}")
+
+    y = 720
+    p.drawString(50, y, "Subject")
+    p.drawString(250, y, "Assessment")
+    p.drawString(400, y, "Score")
+    y -= 20
+
+    for mark in marks:
+        p.drawString(50, y, mark.subject.name)
+        p.drawString(250, y, mark.assessment.name)
+        p.drawString(400, y, f"{mark.score}/{mark.max_score}")
+        y -= 20
+
+    y -= 20
+    p.drawString(50, y, f"Total: {total}")
+    y -= 20
+    p.drawString(50, y, f"Average: {average:.1f}")
+    y -= 20
+    p.drawString(50, y, f"Percentage: {percentage:.1f}%")
+    y -= 20
+    p.drawString(50, y, f"Grade: {grade}")
+
+    p.showPage()
+    p.save()
+    return response
+
+
+def download_fee_statement(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    if not can_access_student(request, student):
+        return redirect('home')
+
+    fee_structure = FeeStructure.objects.filter(school=student.school, grade=student.grade).first()
+    amount_due = fee_structure.amount_due if fee_structure else 0
+
+    payments = Payment.objects.filter(student=student)
+    total_paid = sum(p.amount_paid for p in payments)
+    balance = amount_due - total_paid
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{student.full_name}_fee_statement.pdf"'
+
+    p = canvas.Canvas(response)
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(50, 800, f"{student.school.name}")
+    p.setFont("Helvetica", 12)
+    p.drawString(50, 780, f"Fee Statement - {student.full_name}")
+    p.drawString(50, 765, f"Admission No: {student.admission_number}  Grade: {student.grade}")
+
+    y = 720
+    p.drawString(50, y, f"Amount Due: {amount_due}")
+    y -= 20
+    p.drawString(50, y, f"Total Paid: {total_paid}")
+    y -= 20
+    p.drawString(50, y, f"Balance: {balance}")
+    y -= 40
+
+    p.drawString(50, y, "Payment History")
+    y -= 20
+    for payment in payments:
+        p.drawString(50, y, f"{payment.date_paid} - {payment.amount_paid} ({payment.payment_method})")
+        y -= 20
+
+    p.showPage()
+    p.save()
+    return response
