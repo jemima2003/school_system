@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>Accountant Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ accountant.full_name }}</h1>
+
+    <p><a href="/results/accountant/add-fee-structure/">+ Add Fee Structure</a></p>
+    <p><a href="/results/accountant/record-payment/">+ Record Payment</a></p>
+
+    <h3>All Students</h3>
+    <ul>
+        {% for student in students %}
+        <li>{{ student.full_name }} - Grade {{ student.grade }} - Admission No: {{ student.admission_number }}</li>
+        {% empty %}
+        <li>No students yet.</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="/results/accountant/logout/">Log Out</a></p>
+</body>
+</html>

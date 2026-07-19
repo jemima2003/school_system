@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>Record Payment</title>
+</head>
+<body>
+    <h1>Record Payment</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label>Student:</label><br>
+        <select name="student" required>
+            {% for student in students %}
+            <option value="{{ student.id }}">{{ student.full_name }} (Grade {{ student.grade }})</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label>Amount Paid:</label><br>
+        <input type="number" step="0.01" name="amount_paid" required><br><br>
+
+        <label>Date Paid:</label><br>
+        <input type="date" name="date_paid" required><br><br>
+
+        <label>Payment Method:</label><br>
+        <input type="text" name="payment_method"><br><br>
+
+        <label>Reference Number:</label><br>
+        <input type="text" name="reference_number"><br><br>
+
+        <button type="submit">Save Payment</button>
+    </form>
+
+    <p><a href="/results/accountant/dashboard/">Back to Dashboard</a></p>
+</body>
+</html>

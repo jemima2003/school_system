@@ -5,24 +5,28 @@
     <link rel="stylesheet" href="{% static 'results/style.css' %}">
     <title>Parent Login</title>
 </head>
-<body>
-    <h1>Parent Login</h1>
+<body class="auth-page">
+    <div class="auth-card">
+        <h1>Parent Login</h1>
 
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
+        {% if error %}
+            <p style="color:red;">{{ error }}</p>
+        {% endif %}
 
-    <form method="POST">
-        {% csrf_token %}
-        <label>Phone:</label><br>
-        <input type="text" name="phone"><br><br>
+        <form method="POST">
+            {% csrf_token %}
+            <select name="school" required>
+                <option value="">Select School</option>
+                {% for school in schools %}
+                <option value="{{ school.id }}">{{ school.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="phone" placeholder="Phone Number">
+            <input type="password" name="password" placeholder="Password">
+            <button type="submit">Log In</button>
+        </form>
 
-        <label>Password:</label><br>
-        <input type="password" name="password"><br><br>
-
-        <button type="submit">Log In</button>
-    </form>
-
-    <p>New here? <a href="/results/parent/signup/">Create an account</a></p>
+        <a href="/results/parent/signup/">New here? Create an account</a>
+    </div>
 </body>
 </html>

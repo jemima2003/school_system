@@ -3,11 +3,11 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'results/style.css' %}">
-    <title>Parent Signup</title>
+    <title>Register Your School</title>
 </head>
 <body class="auth-page">
     <div class="auth-card">
-        <h1>Parent Signup</h1>
+        <h1>Register Your School</h1>
 
         {% if error %}
             <p style="color:red;">{{ error }}</p>
@@ -16,10 +16,10 @@
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Create Account</button>
+            <button type="submit">Create School Account</button>
         </form>
 
-        <a href="/results/parent/login/">Already have an account? Log in</a>
+        <a href="/results/school/login/">Already registered? Log in</a>
     </div>
 </body>
 </html>

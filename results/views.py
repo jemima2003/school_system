@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.hashers import make_password, check_password
-from .models import Student, Mark, FeeStructure, Payment, Parent
-from .forms import MarkForm, ParentSignupForm
+from .models import Student, Mark, FeeStructure, Payment, Parent, School, Teacher, Subject, Assessment, Accountant
+from .forms import MarkForm, ParentSignupForm, SchoolSignupForm, TeacherSignupForm, AccountantSignupForm
+
+
+def home(request):
+    return render(request, 'results/home.html')
 
 
 def get_grade(percentage):
@@ -38,15 +42,10 @@ def student_results(request, student_id):
     return render(request, 'results/student_results.html', context)
 
 
-def student_list(request):
-    students = Student.objects.all()
-    return render(request, 'results/student_list.html', {'students': students})
-
-
 def student_fees(request, student_id):
     student = get_object_or_404(Student, id=student_id)
 
-    fee_structure = FeeStructure.objects.filter(grade=student.grade).first()
+    fee_structure = FeeStructure.objects.filter(school=student.school, grade=student.grade).first()
     amount_due = fee_structure.amount_due if fee_structure else 0
 
     payments = Payment.objects.filter(student=student)
@@ -66,19 +65,21 @@ def student_fees(request, student_id):
 
 def parent_login(request):
     error = None
+    schools = School.objects.all()
     if request.method == 'POST':
+        school_id = request.POST.get('school')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
 
-        parent = Parent.objects.filter(phone=phone).first()
+        parent = Parent.objects.filter(school_id=school_id, phone=phone).first()
 
         if parent and check_password(password, parent.password):
             request.session['parent_id'] = parent.id
             return redirect('parent_dashboard')
         else:
-            error = "Invalid phone or password"
+            error = "Invalid school, phone, or password"
 
-    return render(request, 'results/parent_login.html', {'error': error})
+    return render(request, 'results/parent_login.html', {'error': error, 'schools': schools})
 
 
 def parent_dashboard(request):
@@ -97,33 +98,24 @@ def parent_logout(request):
     return redirect('parent_login')
 
 
-def add_mark(request):
-    if request.method == 'POST':
-        form = MarkForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('add_mark')
-    else:
-        form = MarkForm()
-
-    return render(request, 'results/add_mark.html', {'form': form})
-
-
 def parent_signup(request):
     error = None
     if request.method == 'POST':
         form = ParentSignupForm(request.POST)
         if form.is_valid():
+            school = form.cleaned_data['school']
             admission_number = form.cleaned_data['admission_number']
             verification_code = form.cleaned_data['verification_code']
 
             student = Student.objects.filter(
+                school=school,
                 admission_number=admission_number,
                 verification_code=verification_code
             ).first()
 
             if student:
                 parent = Parent.objects.create(
+                    school=school,
                     full_name=form.cleaned_data['full_name'],
                     phone=form.cleaned_data['phone'],
                     email=form.cleaned_data['email'],
@@ -132,8 +124,267 @@ def parent_signup(request):
                 parent.students.add(student)
                 return redirect('parent_login')
             else:
-                error = "Admission number or verification code is incorrect"
+                error = "Admission number or verification code is incorrect for the selected school"
     else:
         form = ParentSignupForm()
 
     return render(request, 'results/parent_signup.html', {'form': form, 'error': error})
+
+
+def school_signup(request):
+    error = None
+    if request.method == 'POST':
+        form = SchoolSignupForm(request.POST)
+        if form.is_valid():
+            School.objects.create(
+                name=form.cleaned_data['name'],
+                email=form.cleaned_data['email'],
+                phone=form.cleaned_data['phone'],
+                password=make_password(form.cleaned_data['password']),
+            )
+            return redirect('school_login')
+    else:
+        form = SchoolSignupForm()
+
+    return render(request, 'results/school_signup.html', {'form': form, 'error': error})
+
+
+def school_login(request):
+    error = None
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        school = School.objects.filter(email=email).first()
+
+        if school and check_password(password, school.password):
+            request.session['school_id'] = school.id
+            return redirect('school_dashboard')
+        else:
+            error = "Invalid email or password"
+
+    return render(request, 'results/school_login.html', {'error': error})
+
+
+def school_dashboard(request):
+    school_id = request.session.get('school_id')
+    if not school_id:
+        return redirect('school_login')
+
+    school = get_object_or_404(School, id=school_id)
+    students = Student.objects.filter(school=school)
+
+    return render(request, 'results/school_dashboard.html', {'school': school, 'students': students})
+
+
+def teacher_signup(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    error = None
+    if request.method == 'POST':
+        form = TeacherSignupForm(request.POST)
+        if form.is_valid():
+            Teacher.objects.create(
+                school=school,
+                full_name=form.cleaned_data['full_name'],
+                email=form.cleaned_data['email'],
+                phone=form.cleaned_data['phone'],
+                password=make_password(form.cleaned_data['password']),
+                grade=form.cleaned_data['grade'],
+            )
+            return redirect('teacher_login')
+    else:
+        form = TeacherSignupForm(initial={'school_id': school_id})
+
+    return render(request, 'results/teacher_signup.html', {'form': form, 'school': school, 'error': error})
+
+
+def teacher_login(request):
+    error = None
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        teacher = Teacher.objects.filter(email=email).first()
+
+        if teacher and check_password(password, teacher.password):
+            request.session['teacher_id'] = teacher.id
+            return redirect('teacher_dashboard')
+        else:
+            error = "Invalid email or password"
+
+    return render(request, 'results/teacher_login.html', {'error': error})
+
+
+def teacher_dashboard(request):
+    teacher_id = request.session.get('teacher_id')
+    if not teacher_id:
+        return redirect('teacher_login')
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    students = Student.objects.filter(added_by=teacher)
+
+    return render(request, 'results/teacher_dashboard.html', {'teacher': teacher, 'students': students})
+
+
+def teacher_logout(request):
+    request.session.flush()
+    return redirect('teacher_login')
+
+
+def teacher_add_student(request):
+    teacher_id = request.session.get('teacher_id')
+    if not teacher_id:
+        return redirect('teacher_login')
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    error = None
+
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        admission_number = request.POST.get('admission_number')
+        stream = request.POST.get('stream', '')
+        verification_code = request.POST.get('verification_code', '')
+
+        Student.objects.create(
+            school=teacher.school,
+            added_by=teacher,
+            full_name=full_name,
+            admission_number=admission_number,
+            grade=teacher.grade,
+            stream=stream,
+            verification_code=verification_code,
+        )
+        return redirect('teacher_dashboard')
+
+    return render(request, 'results/teacher_add_student.html', {'teacher': teacher, 'error': error})
+
+
+def add_mark(request):
+    teacher_id = request.session.get('teacher_id')
+    if not teacher_id:
+        return redirect('teacher_login')
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+
+    if request.method == 'POST':
+        form = MarkForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('add_mark')
+    else:
+        form = MarkForm()
+        form.fields['student'].queryset = Student.objects.filter(added_by=teacher)
+        form.fields['subject'].queryset = Subject.objects.filter(school=teacher.school)
+        form.fields['assessment'].queryset = Assessment.objects.filter(school=teacher.school)
+
+    return render(request, 'results/add_mark.html', {'form': form})
+
+
+def accountant_signup(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    error = None
+    if request.method == 'POST':
+        form = AccountantSignupForm(request.POST)
+        if form.is_valid():
+            Accountant.objects.create(
+                school=school,
+                full_name=form.cleaned_data['full_name'],
+                email=form.cleaned_data['email'],
+                phone=form.cleaned_data['phone'],
+                password=make_password(form.cleaned_data['password']),
+            )
+            return redirect('accountant_login')
+    else:
+        form = AccountantSignupForm()
+
+    return render(request, 'results/accountant_signup.html', {'form': form, 'school': school, 'error': error})
+
+
+def accountant_login(request):
+    error = None
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        accountant = Accountant.objects.filter(email=email).first()
+
+        if accountant and check_password(password, accountant.password):
+            request.session['accountant_id'] = accountant.id
+            return redirect('accountant_dashboard')
+        else:
+            error = "Invalid email or password"
+
+    return render(request, 'results/accountant_login.html', {'error': error})
+
+
+def accountant_dashboard(request):
+    accountant_id = request.session.get('accountant_id')
+    if not accountant_id:
+        return redirect('accountant_login')
+
+    accountant = get_object_or_404(Accountant, id=accountant_id)
+    students = Student.objects.filter(school=accountant.school)
+
+    return render(request, 'results/accountant_dashboard.html', {'accountant': accountant, 'students': students})
+
+
+def accountant_logout(request):
+    request.session.flush()
+    return redirect('accountant_login')
+
+
+def add_fee_structure(request):
+    accountant_id = request.session.get('accountant_id')
+    if not accountant_id:
+        return redirect('accountant_login')
+
+    accountant = get_object_or_404(Accountant, id=accountant_id)
+    error = None
+
+    if request.method == 'POST':
+        grade = request.POST.get('grade')
+        term = request.POST.get('term')
+        academic_year = request.POST.get('academic_year')
+        amount_due = request.POST.get('amount_due')
+
+        FeeStructure.objects.create(
+            school=accountant.school,
+            grade=grade,
+            term=term,
+            academic_year=academic_year,
+            amount_due=amount_due,
+        )
+        return redirect('accountant_dashboard')
+
+    return render(request, 'results/add_fee_structure.html', {'accountant': accountant, 'error': error})
+
+
+def record_payment(request):
+    accountant_id = request.session.get('accountant_id')
+    if not accountant_id:
+        return redirect('accountant_login')
+
+    accountant = get_object_or_404(Accountant, id=accountant_id)
+    students = Student.objects.filter(school=accountant.school)
+    error = None
+
+    if request.method == 'POST':
+        student_id = request.POST.get('student')
+        amount_paid = request.POST.get('amount_paid')
+        date_paid = request.POST.get('date_paid')
+        payment_method = request.POST.get('payment_method', '')
+        reference_number = request.POST.get('reference_number', '')
+
+        student = get_object_or_404(Student, id=student_id)
+
+        Payment.objects.create(
+            student=student,
+            recorded_by=accountant,
+            amount_paid=amount_paid,
+            date_paid=date_paid,
+            payment_method=payment_method,
+            reference_number=reference_number,
+        )
+        return redirect('accountant_dashboard')
+
+    return render(request, 'results/record_payment.html', {'accountant': accountant, 'students': students, 'error': error})

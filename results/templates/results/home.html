@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>ElimuHub</title>
+</head>
+<body class="landing-page">
+    <h1 class="landing-title">ElimuHub</h1>
+    <p class="landing-subtitle">School management made simple</p>
+
+    <div class="role-grid">
+        <div class="role-card">
+            <h3>🏫 School</h3>
+            <a href="/results/school/signup/">Register School</a>
+            <a href="/results/school/login/" class="secondary">School Login</a>
+        </div>
+
+        <div class="role-card">
+            <h3>👩‍🏫 Teacher</h3>
+            <a href="/results/teacher/login/">Teacher Login</a>
+        </div>
+
+        <div class="role-card">
+            <h3>💰 Accountant</h3>
+            <a href="/results/accountant/login/">Accountant Login</a>
+        </div>
+
+        <div class="role-card">
+            <h3>👨‍👩‍👧 Parent</h3>
+            <a href="/results/parent/login/">Parent Login</a>
+            <a href="/results/parent/signup/" class="secondary">Sign Up</a>
+        </div>
+    </div>
+</body>
+</html>

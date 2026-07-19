@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>Teacher Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ teacher.full_name }} - Grade {{ teacher.grade }}</h1>
+
+    <p><a href="/results/teacher/add-student/">+ Add Student</a></p>
+    <p><a href="/results/teacher/add-mark/">+ Add Marks</a></p>
+
+    <h3>Your Students</h3>
+    <ul>
+        {% for student in students %}
+        <li>{{ student.full_name }} - Admission No: {{ student.admission_number }}</li>
+        {% empty %}
+        <li>No students added yet.</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="/results/teacher/logout/">Log Out</a></p>
+</body>
+</html>

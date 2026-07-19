@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>School Dashboard</title>
+</head>
+<body>
+    <h1>{{ school.name }} Dashboard</h1>
+
+    <p>Total Students: {{ students.count }}</p>
+
+    <ul>
+        {% for student in students %}
+        <li>{{ student.full_name }} - Grade {{ student.grade }}</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="/results/">Back to Home</a></p>
+</body>
+</html>
