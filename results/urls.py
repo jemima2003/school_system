@@ -26,4 +26,6 @@ urlpatterns = [
     path('accountant/logout/', views.accountant_logout, name='accountant_logout'),
     path('accountant/add-fee-structure/', views.add_fee_structure, name='add_fee_structure'),
     path('accountant/record-payment/', views.record_payment, name='record_payment'),
+    path('teacher/signup/select/', views.teacher_signup_select_school, name='teacher_signup_select'),
+    path('accountant/signup/select/', views.accountant_signup_select_school, name='accountant_signup_select'),
 ]

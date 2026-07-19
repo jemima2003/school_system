@@ -505,3 +505,19 @@ def download_fee_statement(request, student_id):
     p.showPage()
     p.save()
     return response
+def teacher_signup_select_school(request):
+    schools = School.objects.all()
+    if request.method == 'POST':
+        school_id = request.POST.get('school')
+        return redirect('teacher_signup', school_id=school_id)
+
+    return render(request, 'results/select_school.html', {'schools': schools, 'role': 'Teacher', 'action_url': '/results/teacher/signup/select/'})
+
+
+def accountant_signup_select_school(request):
+    schools = School.objects.all()
+    if request.method == 'POST':
+        school_id = request.POST.get('school')
+        return redirect('accountant_signup', school_id=school_id)
+
+    return render(request, 'results/select_school.html', {'schools': schools, 'role': 'Accountant', 'action_url': '/results/accountant/signup/select/'})
