@@ -254,7 +254,7 @@ li {
 
 .hamburger {
     font-size: 1.8em;
-    color: white;
+    color: black;
     cursor: pointer;
     user-select: none;
 }
