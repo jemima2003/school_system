@@ -7,20 +7,31 @@
 </head>
 <body class="auth-page">
     <div class="auth-card">
-        <h1>School Login</h1>
+        <div class="auth-icon">🏫</div>
+        <h1>SCHOOL LOGIN</h1>
 
         {% if error %}
-            <p style="color:red;">{{ error }}</p>
+            <p style="color:#ffb3b3;">{{ error }}</p>
         {% endif %}
 
         <form method="POST">
             {% csrf_token %}
             <input type="email" name="email" placeholder="School Email">
-            <input type="password" name="password" placeholder="Password">
-            <button type="submit">Log In</button>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="password-field" placeholder="Password">
+                <span class="toggle-eye" onclick="togglePassword()">👁️</span>
+            </div>
+            <button type="submit">LOGIN</button>
         </form>
 
         <a href="/results/school/signup/">New school? Register here</a>
     </div>
+
+    <script>
+    function togglePassword() {
+        const field = document.getElementById('password-field');
+        field.type = field.type === 'password' ? 'text' : 'password';
+    }
+    </script>
 </body>
 </html>

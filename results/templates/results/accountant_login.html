@@ -7,10 +7,11 @@
 </head>
 <body class="auth-page">
     <div class="auth-card">
-        <h1>Accountant Login</h1>
+        <div class="auth-icon">💰</div>
+        <h1>ACCOUNTANT LOGIN</h1>
 
         {% if error %}
-            <p style="color:red;">{{ error }}</p>
+            <p style="color:#ffb3b3;">{{ error }}</p>
         {% endif %}
 
         <form method="POST">
@@ -20,7 +21,7 @@
                 <input type="password" name="password" id="password-field" placeholder="Password">
                 <span class="toggle-eye" onclick="togglePassword()">👁️</span>
             </div>
-            <button type="submit">Log In</button>
+            <button type="submit">LOGIN</button>
         </form>
     </div>
 

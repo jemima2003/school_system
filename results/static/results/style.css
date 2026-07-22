@@ -61,28 +61,61 @@ li {
     background: linear-gradient(135deg, #2c3e50, #4b79a1);
 }
 
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
 .auth-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.15);
     padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
     width: 320px;
     text-align: center;
+    color: white;
+}
+
+.auth-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px auto;
+    font-size: 1.8em;
 }
 
 .auth-card h1 {
     border: none;
     margin-bottom: 20px;
-    color: #2c3e50;
+    color: white;
+    font-size: 1.3em;
+    letter-spacing: 1px;
 }
 
-.auth-card input {
+.auth-card input, .auth-card select {
     width: 100%;
     padding: 10px;
     margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    border-radius: 0;
+    background: transparent;
+    color: white;
     box-sizing: border-box;
+}
+
+.auth-card input::placeholder {
+    color: rgba(255,255,255,0.6);
 }
 
 .auth-card button {
@@ -94,7 +127,7 @@ li {
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .auth-card button:hover {
@@ -104,6 +137,28 @@ li {
 .auth-card a {
     display: block;
     margin-top: 15px;
+    color: #7fc4f0;
+    font-size: 0.9em;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 35px;
+}
+
+.toggle-eye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.1em;
+    user-select: none;
+    filter: brightness(1.5);
+}
 }
 .landing-page {
     min-height: 100vh;
