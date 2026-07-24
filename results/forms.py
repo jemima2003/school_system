@@ -40,6 +40,7 @@ class SchoolSignupForm(forms.Form):
         max_length=100,
         widget=forms.TextInput(attrs={'placeholder': "School Name"})
     )
+    level = forms.ChoiceField(choices=School.LEVEL_CHOICES)
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={'placeholder': "School Email"})
     )

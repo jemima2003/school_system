@@ -165,6 +165,7 @@ def school_signup(request):
         if form.is_valid():
             School.objects.create(
                 name=form.cleaned_data['name'],
+                level=form.cleaned_data['level'],
                 email=form.cleaned_data['email'],
                 phone=form.cleaned_data['phone'],
                 password=make_password(form.cleaned_data['password']),

@@ -2,7 +2,12 @@ from django.db import models
 
 
 class School(models.Model):
+    LEVEL_CHOICES = [
+        ('primary', 'Primary School'),
+        ('secondary', 'Secondary School'),
+    ]
     name = models.CharField(max_length=100)
+    level = models.CharField(max_length=20, choices=LEVEL_CHOICES, default='primary')
     email = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
     password = models.CharField(max_length=100)

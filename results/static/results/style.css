@@ -105,6 +105,18 @@ li {
     color: white;
     box-sizing: border-box;
 }
+.auth-card select {
+    background: white;
+    color: #222;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.auth-card select option {
+    color: #222;
+    background: white;
+}
 
 .auth-card input::placeholder {
     color: rgba(255,255,255,0.6);
@@ -290,4 +302,8 @@ li {
     display: inline-block;
     margin-top: 20px;
     color: #2980b9;
+}
+.auth-card select option {
+    color: #222;
+    background: white;
 }
