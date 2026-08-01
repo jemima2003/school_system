@@ -16,12 +16,76 @@
             <div class="stat-label">SCHOOL STUDENTS</div>
             <div class="stat-value">{{ students.count }}</div>
         </div>
+        <div class="stat-card" style="border-left-color:#27ae60;">
+            <div class="stat-label">FEE STRUCTURES</div>
+            <div class="stat-value">{{ fee_structures.count }}</div>
+        </div>
+        <div class="stat-card" style="border-left-color:#f39c12;">
+            <div class="stat-label">PAYMENTS RECORDED</div>
+            <div class="stat-value">{{ payments.count }}</div>
+        </div>
     </div>
 
     <div class="dashboard-section">
         <h3>Quick Actions</h3>
         <a href="/results/accountant/add-fee-structure/" class="action-btn">+ Add Fee Structure</a>
         <a href="/results/accountant/record-payment/" class="action-btn">+ Record Payment</a>
+    </div>
+
+    <div class="dashboard-section">
+        <h3>Fee Structures</h3>
+        <table class="dashboard-table">
+            <tr>
+                <th>Grade</th>
+                <th>Term</th>
+                <th>Year</th>
+                <th>Amount Due</th>
+                <th>Actions</th>
+            </tr>
+            {% for fee in fee_structures %}
+            <tr>
+                <td>{{ fee.grade }}</td>
+                <td>{{ fee.term }}</td>
+                <td>{{ fee.academic_year }}</td>
+                <td>{{ fee.amount_due }}</td>
+                <td>
+                    <a href="/results/accountant/fee/{{ fee.id }}/edit/">Edit</a>
+                    &nbsp;|&nbsp;
+                    <a href="/results/accountant/fee/{{ fee.id }}/delete/" onclick="return confirm('Delete this fee structure?')" style="color:#e74c3c;">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No fee structures yet.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="dashboard-section">
+        <h3>Payments</h3>
+        <table class="dashboard-table">
+            <tr>
+                <th>Student</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Method</th>
+                <th>Actions</th>
+            </tr>
+            {% for payment in payments %}
+            <tr>
+                <td>{{ payment.student.full_name }}</td>
+                <td>{{ payment.amount_paid }}</td>
+                <td>{{ payment.date_paid }}</td>
+                <td>{{ payment.payment_method }}</td>
+                <td>
+                    <a href="/results/accountant/payment/{{ payment.id }}/edit/">Edit</a>
+                    &nbsp;|&nbsp;
+                    <a href="/results/accountant/payment/{{ payment.id }}/delete/" onclick="return confirm('Delete this payment record?')" style="color:#e74c3c;">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No payments recorded yet.</td></tr>
+            {% endfor %}
+        </table>
     </div>
 
     <div class="dashboard-section">

@@ -674,3 +674,61 @@ def teacher_delete_student(request, student_id):
     student = get_object_or_404(Student, id=student_id, added_by=teacher)
     student.delete()
     return redirect('teacher_dashboard')
+def accountant_edit_fee_structure(request, fee_id):
+    accountant_id = request.session.get('accountant_id')
+    if not accountant_id:
+        return redirect('accountant_login')
+
+    accountant = get_object_or_404(Accountant, id=accountant_id)
+    fee = get_object_or_404(FeeStructure, id=fee_id, school=accountant.school)
+
+    if request.method == 'POST':
+        fee.grade = request.POST.get('grade')
+        fee.term = request.POST.get('term')
+        fee.academic_year = request.POST.get('academic_year')
+        fee.amount_due = request.POST.get('amount_due')
+        fee.save()
+        return redirect('accountant_dashboard')
+
+    return render(request, 'results/accountant_edit_fee.html', {'accountant': accountant, 'fee': fee})
+
+
+def accountant_delete_fee_structure(request, fee_id):
+    accountant_id = request.session.get('accountant_id')
+    if not accountant_id:
+        return redirect('accountant_login')
+
+    accountant = get_object_or_404(Accountant, id=accountant_id)
+    fee = get_object_or_404(FeeStructure, id=fee_id, school=accountant.school)
+    fee.delete()
+    return redirect('accountant_dashboard')
+
+
+def accountant_edit_payment(request, payment_id):
+    accountant_id = request.session.get('accountant_id')
+    if not accountant_id:
+        return redirect('accountant_login')
+
+    accountant = get_object_or_404(Accountant, id=accountant_id)
+    payment = get_object_or_404(Payment, id=payment_id, student__school=accountant.school)
+
+    if request.method == 'POST':
+        payment.amount_paid = request.POST.get('amount_paid')
+        payment.date_paid = request.POST.get('date_paid')
+        payment.payment_method = request.POST.get('payment_method', '')
+        payment.reference_number = request.POST.get('reference_number', '')
+        payment.save()
+        return redirect('accountant_dashboard')
+
+    return render(request, 'results/accountant_edit_payment.html', {'accountant': accountant, 'payment': payment})
+
+
+def accountant_delete_payment(request, payment_id):
+    accountant_id = request.session.get('accountant_id')
+    if not accountant_id:
+        return redirect('accountant_login')
+
+    accountant = get_object_or_404(Accountant, id=accountant_id)
+    payment = get_object_or_404(Payment, id=payment_id, student__school=accountant.school)
+    payment.delete()
+    return redirect('accountant_dashboard')

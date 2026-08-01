@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>Edit Payment</title>
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-header">
+        <h1>Edit Payment - {{ payment.student.full_name }}</h1>
+    </div>
+
+    <div class="dashboard-section">
+        <form method="POST">
+            {% csrf_token %}
+            <label>Amount Paid:</label><br>
+            <input type="number" step="0.01" name="amount_paid" value="{{ payment.amount_paid }}" required><br><br>
+
+            <label>Date Paid:</label><br>
+            <input type="date" name="date_paid" value="{{ payment.date_paid|date:'Y-m-d' }}" required><br><br>
+
+            <label>Payment Method:</label><br>
+            <input type="text" name="payment_method" value="{{ payment.payment_method }}"><br><br>
+
+            <label>Reference Number:</label><br>
+            <input type="text" name="reference_number" value="{{ payment.reference_number }}"><br><br>
+
+            <button type="submit" class="action-btn" style="border:none; cursor:pointer;">Save Changes</button>
+        </form>
+        <a href="/results/accountant/dashboard/" class="action-btn" style="background:#888; margin-top:10px;">Cancel</a>
+    </div>
+</body>
+</html>
