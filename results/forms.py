@@ -89,3 +89,7 @@ class AccountantSignupForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': "Create a Password"})
     )
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': "Registered Email"}))
+    phone = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': "Registered Phone Number"}))
+    new_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': "New Password"}))

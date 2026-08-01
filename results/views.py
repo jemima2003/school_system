@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from .models import Student, Mark, FeeStructure, Payment, Parent, School, Teacher, Subject, Assessment, Accountant
 from .forms import MarkForm, ParentSignupForm, SchoolSignupForm, TeacherSignupForm, AccountantSignupForm
+from .forms import MarkForm, ParentSignupForm, SchoolSignupForm, TeacherSignupForm, AccountantSignupForm, ForgotPasswordForm
 
 
 def home(request):
@@ -558,4 +559,90 @@ def delete_accountant_account(request):
     accountant = get_object_or_404(Accountant, id=accountant_id)
     accountant.delete()
     request.session.flush()
-    return redirect('home')   
+    return redirect('home')
+def school_forgot_password(request):
+    error = None
+    success = None
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            school = School.objects.filter(email=email, phone=phone).first()
+            if school:
+                school.password = make_password(form.cleaned_data['new_password'])
+                school.save()
+                success = "Password reset successful. You can now log in."
+                form = ForgotPasswordForm()
+            else:
+                error = "No account found with that email and phone number"
+    else:
+        form = ForgotPasswordForm()
+
+    return render(request, 'results/forgot_password.html', {'form': form, 'error': error, 'success': success, 'role': 'School', 'login_url': '/results/school/login/'})
+
+
+def teacher_forgot_password(request):
+    error = None
+    success = None
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            teacher = Teacher.objects.filter(email=email, phone=phone).first()
+            if teacher:
+                teacher.password = make_password(form.cleaned_data['new_password'])
+                teacher.save()
+                success = "Password reset successful. You can now log in."
+                form = ForgotPasswordForm()
+            else:
+                error = "No account found with that email and phone number"
+    else:
+        form = ForgotPasswordForm()
+
+    return render(request, 'results/forgot_password.html', {'form': form, 'error': error, 'success': success, 'role': 'Teacher', 'login_url': '/results/teacher/login/'})
+
+
+def accountant_forgot_password(request):
+    error = None
+    success = None
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            accountant = Accountant.objects.filter(email=email, phone=phone).first()
+            if accountant:
+                accountant.password = make_password(form.cleaned_data['new_password'])
+                accountant.save()
+                success = "Password reset successful. You can now log in."
+                form = ForgotPasswordForm()
+            else:
+                error = "No account found with that email and phone number"
+    else:
+        form = ForgotPasswordForm()
+
+    return render(request, 'results/forgot_password.html', {'form': form, 'error': error, 'success': success, 'role': 'Accountant', 'login_url': '/results/accountant/login/'})
+
+
+def parent_forgot_password(request):
+    error = None
+    success = None
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            parent = Parent.objects.filter(email=email, phone=phone).first()
+            if parent:
+                parent.password = make_password(form.cleaned_data['new_password'])
+                parent.save()
+                success = "Password reset successful. You can now log in."
+                form = ForgotPasswordForm()
+            else:
+                error = "No account found with that email and phone number"
+    else:
+        form = ForgotPasswordForm()
+
+    return render(request, 'results/forgot_password.html', {'form': form, 'error': error, 'success': success, 'role': 'Parent', 'login_url': '/results/parent/login/'})
