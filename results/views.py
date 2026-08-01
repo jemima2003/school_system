@@ -527,4 +527,35 @@ def about_us(request):
 
 
 def our_services(request):
-    return render(request, 'results/our_services.html')    
+    return render(request, 'results/our_services.html') 
+def delete_school_account(request):
+    school_id = request.session.get('school_id')
+    if not school_id:
+        return redirect('school_login')
+
+    school = get_object_or_404(School, id=school_id)
+    school.delete()
+    request.session.flush()
+    return redirect('home')
+
+
+def delete_teacher_account(request):
+    teacher_id = request.session.get('teacher_id')
+    if not teacher_id:
+        return redirect('teacher_login')
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    teacher.delete()
+    request.session.flush()
+    return redirect('home')
+
+
+def delete_accountant_account(request):
+    accountant_id = request.session.get('accountant_id')
+    if not accountant_id:
+        return redirect('accountant_login')
+
+    accountant = get_object_or_404(Accountant, id=accountant_id)
+    accountant.delete()
+    request.session.flush()
+    return redirect('home')   

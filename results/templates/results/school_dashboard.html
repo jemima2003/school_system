@@ -5,26 +5,55 @@
     <link rel="stylesheet" href="{% static 'results/style.css' %}">
     <title>School Dashboard</title>
 </head>
-<body>
-    <h1>{{ school.name }} Dashboard</h1>
+<body class="dashboard-page">
+    <div class="dashboard-header">
+        <h1>{{ school.name }}</h1>
+        <a href="/results/" class="action-btn" style="background:#888;">Back to Home</a>
+    </div>
 
-    <p>Total Students: {{ students.count }}</p>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-label">TOTAL STUDENTS</div>
+            <div class="stat-value">{{ students.count }}</div>
+        </div>
+        <div class="stat-card" style="border-left-color:#27ae60;">
+            <div class="stat-label">SCHOOL LEVEL</div>
+            <div class="stat-value" style="font-size:1.1em;">{{ school.get_level_display }}</div>
+        </div>
+    </div>
 
-    <h3>Staff Signup Links</h3>
-    <p>Share these links with your staff so they can create their own accounts:</p>
-    <p><strong>Teacher Signup:</strong><br>
-    <code>https://elimuhub-1ccn.onrender.com/results/school/{{ school.id }}/teacher/signup/</code></p>
+    <div class="dashboard-section">
+        <h3>Staff Signup Links</h3>
+        <p>Share these links with your staff so they can create their own accounts:</p>
+        <p><strong>Teacher Signup:</strong><br>
+        <code>https://elimuhub-1ccn.onrender.com/results/school/{{ school.id }}/teacher/signup/</code></p>
+        <p><strong>Accountant Signup:</strong><br>
+        <code>https://elimuhub-1ccn.onrender.com/results/school/{{ school.id }}/accountant/signup/</code></p>
+    </div>
 
-    <p><strong>Accountant Signup:</strong><br>
-    <code>https://elimuhub-1ccn.onrender.com/results/school/{{ school.id }}/accountant/signup/</code></p>
-
-    <h3>Students</h3>
-    <ul>
-        {% for student in students %}
-        <li>{{ student.full_name }} - Grade {{ student.grade }}</li>
-        {% endfor %}
-    </ul>
-
-    <p><a href="/results/">Back to Home</a></p>
+    <div class="dashboard-section">
+        <h3>Students</h3>
+        <table class="dashboard-table">
+            <tr>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Admission No</th>
+            </tr>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.grade }}</td>
+                <td>{{ student.admission_number }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">No students yet.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="dashboard-section" style="border-left: 4px solid #e74c3c;">
+    <h3 style="color:#e74c3c;">Danger Zone</h3>
+    <p>Deleting your account permanently removes your school, students, teachers, accountants, and all records. This cannot be undone.</p>
+    <a href="/results/school/delete/" class="action-btn" style="background:#e74c3c;" onclick="return confirm('Are you sure? This will permanently delete your school and all its data.')">Delete School Account</a>
+</div>
 </body>
 </html>

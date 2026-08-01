@@ -5,21 +5,49 @@
     <link rel="stylesheet" href="{% static 'results/style.css' %}">
     <title>Accountant Dashboard</title>
 </head>
-<body>
-    <h1>Welcome, {{ accountant.full_name }}</h1>
+<body class="dashboard-page">
+    <div class="dashboard-header">
+        <h1>Welcome, {{ accountant.full_name }}</h1>
+        <a href="/results/accountant/logout/" class="action-btn" style="background:#888;">Log Out</a>
+    </div>
 
-    <p><a href="/results/accountant/add-fee-structure/">+ Add Fee Structure</a></p>
-    <p><a href="/results/accountant/record-payment/">+ Record Payment</a></p>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-label">SCHOOL STUDENTS</div>
+            <div class="stat-value">{{ students.count }}</div>
+        </div>
+    </div>
 
-    <h3>All Students</h3>
-    <ul>
-        {% for student in students %}
-        <li>{{ student.full_name }} - Grade {{ student.grade }} - Admission No: {{ student.admission_number }}</li>
-        {% empty %}
-        <li>No students yet.</li>
-        {% endfor %}
-    </ul>
+    <div class="dashboard-section">
+        <h3>Quick Actions</h3>
+        <a href="/results/accountant/add-fee-structure/" class="action-btn">+ Add Fee Structure</a>
+        <a href="/results/accountant/record-payment/" class="action-btn">+ Record Payment</a>
+    </div>
 
-    <p><a href="/results/accountant/logout/">Log Out</a></p>
+    <div class="dashboard-section">
+        <h3>All Students</h3>
+        <table class="dashboard-table">
+            <tr>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Admission No</th>
+            </tr>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.grade }}</td>
+                <td>{{ student.admission_number }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">No students yet.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="dashboard-section" style="border-left: 4px solid #e74c3c;">
+        <h3 style="color:#e74c3c;">Danger Zone</h3>
+        <p>Deleting your account permanently removes your accountant profile. This cannot be undone.</p>
+        <a href="/results/accountant/delete/" class="action-btn" style="background:#e74c3c;" onclick="return confirm('Are you sure? This will permanently delete your account.')">Delete My Account</a>
+    </div>
 </body>
 </html>

@@ -5,21 +5,51 @@
     <link rel="stylesheet" href="{% static 'results/style.css' %}">
     <title>Teacher Dashboard</title>
 </head>
-<body>
-    <h1>Welcome, {{ teacher.full_name }} - Grade {{ teacher.grade }}</h1>
+<body class="dashboard-page">
+    <div class="dashboard-header">
+        <h1>Welcome, {{ teacher.full_name }}</h1>
+        <a href="/results/teacher/logout/" class="action-btn" style="background:#888;">Log Out</a>
+    </div>
 
-    <p><a href="/results/teacher/add-student/">+ Add Student</a></p>
-    <p><a href="/results/teacher/add-mark/">+ Add Marks</a></p>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-label">YOUR GRADE</div>
+            <div class="stat-value">Grade {{ teacher.grade }}</div>
+        </div>
+        <div class="stat-card" style="border-left-color:#27ae60;">
+            <div class="stat-label">YOUR STUDENTS</div>
+            <div class="stat-value">{{ students.count }}</div>
+        </div>
+    </div>
 
-    <h3>Your Students</h3>
-    <ul>
-        {% for student in students %}
-        <li>{{ student.full_name }} - Admission No: {{ student.admission_number }}</li>
-        {% empty %}
-        <li>No students added yet.</li>
-        {% endfor %}
-    </ul>
+    <div class="dashboard-section">
+        <h3>Quick Actions</h3>
+        <a href="/results/teacher/add-student/" class="action-btn">+ Add Student</a>
+        <a href="/results/teacher/add-mark/" class="action-btn">+ Add Marks</a>
+    </div>
 
-    <p><a href="/results/teacher/logout/">Log Out</a></p>
+    <div class="dashboard-section">
+        <h3>Your Students</h3>
+        <table class="dashboard-table">
+            <tr>
+                <th>Name</th>
+                <th>Admission No</th>
+            </tr>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.admission_number }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2">No students added yet.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="dashboard-section" style="border-left: 4px solid #e74c3c;">
+        <h3 style="color:#e74c3c;">Danger Zone</h3>
+        <p>Deleting your account permanently removes your teacher profile and all students you added. This cannot be undone.</p>
+        <a href="/results/teacher/delete/" class="action-btn" style="background:#e74c3c;" onclick="return confirm('Are you sure? This will permanently delete your account.')">Delete My Account</a>
+    </div>
 </body>
 </html>

@@ -30,4 +30,7 @@ urlpatterns = [
     path('accountant/signup/select/', views.accountant_signup_select_school, name='accountant_signup_select'),
     path('about/', views.about_us, name='about_us'),
     path('services/', views.our_services, name='our_services'),
+    path('school/delete/', views.delete_school_account, name='delete_school_account'),
+    path('teacher/delete/', views.delete_teacher_account, name='delete_teacher_account'),
+    path('accountant/delete/', views.delete_accountant_account, name='delete_accountant_account'),
 ]
