@@ -34,14 +34,20 @@
             <tr>
                 <th>Name</th>
                 <th>Admission No</th>
+                <th>Actions</th>
             </tr>
             {% for student in students %}
             <tr>
                 <td>{{ student.full_name }}</td>
                 <td>{{ student.admission_number }}</td>
+                <td>
+                    <a href="/results/teacher/student/{{ student.id }}/edit/">Edit</a>
+                    &nbsp;|&nbsp;
+                    <a href="/results/teacher/student/{{ student.id }}/delete/" onclick="return confirm('Delete {{ student.full_name }}? This cannot be undone.')" style="color:#e74c3c;">Delete</a>
+                </td>
             </tr>
             {% empty %}
-            <tr><td colspan="2">No students added yet.</td></tr>
+            <tr><td colspan="3">No students added yet.</td></tr>
             {% endfor %}
         </table>
     </div>

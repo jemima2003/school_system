@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'results/style.css' %}">
+    <title>Edit Student</title>
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-header">
+        <h1>Edit Student</h1>
+    </div>
+
+    <div class="dashboard-section">
+        <form method="POST">
+            {% csrf_token %}
+            <label>Full Name:</label><br>
+            <input type="text" name="full_name" value="{{ student.full_name }}" required><br><br>
+
+            <label>Admission Number:</label><br>
+            <input type="text" name="admission_number" value="{{ student.admission_number }}" required><br><br>
+
+            <label>Stream:</label><br>
+            <input type="text" name="stream" value="{{ student.stream }}"><br><br>
+
+            <label>Verification Code:</label><br>
+            <input type="text" name="verification_code" value="{{ student.verification_code }}"><br><br>
+
+            <button type="submit" class="action-btn" style="border:none; cursor:pointer;">Save Changes</button>
+        </form>
+        <a href="/results/teacher/dashboard/" class="action-btn" style="background:#888; margin-top:10px;">Cancel</a>
+    </div>
+</body>
+</html>

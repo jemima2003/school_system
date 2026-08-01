@@ -646,3 +646,31 @@ def parent_forgot_password(request):
         form = ForgotPasswordForm()
 
     return render(request, 'results/forgot_password.html', {'form': form, 'error': error, 'success': success, 'role': 'Parent', 'login_url': '/results/parent/login/'})
+def teacher_edit_student(request, student_id):
+    teacher_id = request.session.get('teacher_id')
+    if not teacher_id:
+        return redirect('teacher_login')
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    student = get_object_or_404(Student, id=student_id, added_by=teacher)
+
+    if request.method == 'POST':
+        student.full_name = request.POST.get('full_name')
+        student.admission_number = request.POST.get('admission_number')
+        student.stream = request.POST.get('stream', '')
+        student.verification_code = request.POST.get('verification_code', '')
+        student.save()
+        return redirect('teacher_dashboard')
+
+    return render(request, 'results/teacher_edit_student.html', {'teacher': teacher, 'student': student})
+
+
+def teacher_delete_student(request, student_id):
+    teacher_id = request.session.get('teacher_id')
+    if not teacher_id:
+        return redirect('teacher_login')
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    student = get_object_or_404(Student, id=student_id, added_by=teacher)
+    student.delete()
+    return redirect('teacher_dashboard')

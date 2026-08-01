@@ -37,4 +37,6 @@ urlpatterns = [
     path('teacher/forgot-password/', views.teacher_forgot_password, name='teacher_forgot_password'),
     path('accountant/forgot-password/', views.accountant_forgot_password, name='accountant_forgot_password'),
     path('parent/forgot-password/', views.parent_forgot_password, name='parent_forgot_password'),
+    path('teacher/student/<int:student_id>/edit/', views.teacher_edit_student, name='teacher_edit_student'),
+    path('teacher/student/<int:student_id>/delete/', views.teacher_delete_student, name='teacher_delete_student'),
 ]
